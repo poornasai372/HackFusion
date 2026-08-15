@@ -1,5 +1,53 @@
 # CODE PREDATORS — X-Ray to Finding Prototype
 
+⚠️ IMPORTANT — How to Access the Project
+To experience the complete X-Ray to Finding prototype, please download the following files from this repository.
+🌐 1. Test the X-Ray Scanning Prototype
+
+Download the index.html file.
+Open the downloaded index.html file.
+It will automatically open the prototype in your web browser.
+Upload an X-ray image to test the X-ray scanning results and explore the prototype.
+
+🎥 2. Watch the Demo Video
+
+Download the Demo Video file.
+Open the downloaded video file to watch the complete demonstration of the prototype.
+
+📊 3. View the Presentation
+
+Download the Presentation file.
+Open the file using Microsoft PowerPoint, Google Slides, or another compatible application to view the complete project presentation.
+
+📁 Files
+
+
+
+File
+Purpose
+
+
+
+
+index.html
+Launch and test the X-ray scanning prototype
+
+
+Demo Video
+Watch the complete demonstration
+
+
+Presentation
+View the complete project presentation
+
+
+
+
+Note: This is a hackathon prototype created to demonstrate the proposed X-ray analysis workflow. The current abnormality findings and confidence values are simulated for demonstration purposes and should not be considered medical diagnoses.
+
+For the complete experience, we recommend downloading all three files.
+
+
 ## Overview
 
 **CODE PREDATORS** is a hackathon prototype demonstrating an AI-assisted X-ray analysis workflow.
