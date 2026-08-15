@@ -1,7 +1,4 @@
 # CODE PREDATORS — X-Ray to Finding Prototype
-## 🌐 Live Website
-
-[Visit the Website](https://your-website-link.com)
 
 ## Overview
 
