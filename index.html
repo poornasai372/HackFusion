@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>X-Ray to Finding | CODE PREDATORS</title>
+<style>
+:root{
+ --bg:#061027;--panel:#0b1735;--panel2:#0f1e43;--line:#284477;
+ --text:#edf4ff;--muted:#8ea3cb;--cyan:#21d8ff;--purple:#8c65ff;
+ --green:#3ce39c;--red:#ff5c73;--amber:#ffc86b
+}
+*{box-sizing:border-box}body{margin:0;color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;
+background:radial-gradient(circle at 80% 8%,#164a6b44,transparent 30%),radial-gradient(circle at 12% 88%,#542e8240,transparent 35%),var(--bg)}
+.app{max-width:1480px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border:1px solid #3a6099;border-radius:13px;display:grid;place-items:center;background:#0b2142;color:var(--cyan);font-weight:900}
+h1{font-size:23px;margin:0}.sub{color:var(--muted);font-size:11px;margin-top:3px}.online{border:1px solid #286158;border-radius:999px;padding:8px 12px;color:var(--green);font-size:11px;background:#0b332633}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.card{background:linear-gradient(145deg,#0f1f46f2,#09142df2);border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 16px 45px #0003}.card h2{font-size:14px;margin:0 0 13px}
+.viewer{height:430px;border:1px dashed #4c6797;border-radius:14px;background:#030812;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.viewer.drag{border-color:var(--cyan);box-shadow:inset 0 0 60px #21d8ff12}.viewer img{max-width:96%;max-height:96%;object-fit:contain;display:none}
+.overlay{position:absolute;display:none;border:3px solid var(--red);box-shadow:0 0 22px #ff5c7399;background:#ff5c7315;border-radius:10px;pointer-events:none}
+.overlay .tag{position:absolute;top:-28px;left:-3px;background:var(--red);padding:5px 8px;border-radius:6px 6px 0 0;color:white;font-size:10px;font-weight:800;white-space:nowrap}
+.placeholder{text-align:center}.icon{font-size:44px}.small{font-size:10px;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.btn{border:1px solid #38568a;background:#132650;color:var(--text);padding:9px 12px;border-radius:9px;cursor:pointer;font-size:12px}.btn.primary{background:linear-gradient(135deg,#126e8d,#5c3eb2);border-color:#5d8dca}.btn:hover{filter:brightness(1.12)}input{display:none}
+.pipeline{display:grid;gap:7px}.step{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #233a68;background:#091633;border-radius:10px}.dot{width:10px;height:10px;border-radius:50%;background:#506383;flex:none}.step.active{border-color:#2785a4}.step.active .dot{background:var(--cyan);box-shadow:0 0 13px var(--cyan)}.step.done .dot{background:var(--green)}.step b{font-size:11px}.step span{margin-left:auto;color:var(--muted);font-size:9px}
+.progress{height:7px;background:#07112b;border-radius:99px;overflow:hidden;margin-top:12px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:.3s}
+.resultgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric{padding:12px;border:1px solid #263e70;background:#091633;border-radius:11px}.metric label{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.1em}.metric strong{display:block;margin-top:5px;font-size:15px}.big{font-size:23px!important}.green{color:var(--green)}.red{color:var(--red)}
+.route{margin-top:9px;padding:10px;border:1px solid #2b477a;border-radius:10px;background:#091735;font-size:11px}.route b{color:var(--cyan)}
+.finding{margin-top:9px;border:1px solid #743c4c;background:#35131f55;border-radius:11px;padding:11px;font-size:11px}.finding strong{color:#ff8a9b}
+.models{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.model{padding:10px;border:1px solid #263e70;background:#091633;border-radius:10px}.model b{font-size:11px}.model p{font-size:9px;color:var(--muted);margin:4px 0 0}.selected{border-color:var(--cyan);box-shadow:inset 0 0 20px #21d8ff0b}
+.history .case{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #20345d;font-size:10px}
+.disclaimer{font-size:9px;color:#7186ac;text-align:center;margin-top:10px}.footer{text-align:center;color:#6e83ab;font-size:9px;margin-top:15px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.models{grid-template-columns:1fr}.viewer{height:330px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brand"><div class="logo">XR</div><div><h1>X-Ray to Finding</h1><div class="sub">Body-part identification • Specialized analysis • Problem detection • Localization</div></div></div>
+ <div class="online">● Prototype Online</div>
+</header>
+
+<div class="grid">
+<section>
+ <div class="card">
+  <h2>1. Upload X-Ray</h2>
+  <div id="viewer" class="viewer">
+   <div id="placeholder" class="placeholder">
+    <div class="icon">🩻</div><b>Drop an X-ray here</b>
+    <div class="small">Automatic routing: Dental • Chest • Forearm</div>
+    <div class="row" style="justify-content:center">
+      <label class="btn primary">Choose X-ray<input id="file" type="file" accept="image/*"></label>
+      <button class="btn" onclick="demo('dental')">Dental Demo</button>
+      <button class="btn" onclick="demo('chest')">Chest Demo</button>
+      <button class="btn" onclick="demo('forearm')">Forearm Demo</button>
+    </div>
+   </div>
+   <img id="preview">
+   <div id="overlay" class="overlay"><div id="overlayTag" class="tag">Potential finding</div></div>
+  </div>
+  <div class="row">
+    <button class="btn primary" onclick="runAnalysis()">⚡ Analyze X-ray</button>
+    <button class="btn" onclick="resetAll()">Reset</button>
+  </div>
+  <div class="disclaimer">Hackathon prototype: findings are simulated for demonstration and are not a medical diagnosis.</div>
+ </div>
+
+ <div class="card" style="margin-top:16px">
+  <h2>Specialized Model Library</h2>
+  <div class="models">
+   <div id="mdental" class="model"><b>🦷 Dental Model</b><p>Dental abnormality analysis</p></div>
+   <div id="mchest" class="model"><b>🫁 Chest Model</b><p>Chest abnormality analysis</p></div>
+   <div id="mforearm" class="model"><b>🦴 Forearm Model</b><p>Fracture / bone analysis</p></div>
+  </div>
+ </div>
+</section>
+
+<aside>
+ <div class="card">
+  <h2>2. AI Analysis Pipeline</h2>
+  <div class="pipeline">
+   <div class="step" id="s1"><i class="dot"></i><b>Image preprocessing</b><span>OpenCV</span></div>
+   <div class="step" id="s2"><i class="dot"></i><b>Body-part identification</b><span>3-class classifier</span></div>
+   <div class="step" id="s3"><i class="dot"></i><b>Specialized model selection</b><span>Auto routing</span></div>
+   <div class="step" id="s4"><i class="dot"></i><b>Problem detection</b><span>Detection model</span></div>
+   <div class="step" id="s5"><i class="dot"></i><b>Problem localization</b><span>Region / heatmap</span></div>
+   <div class="step" id="s6"><i class="dot"></i><b>Generate finding</b><span>Professional review</span></div>
+  </div>
+  <div class="progress"><div id="bar" class="bar"></div></div>
+  <div id="status" class="small" style="margin-top:9px">Waiting for an X-ray…</div>
+ </div>
+
+ <div class="card" style="margin-top:16px">
+  <h2>3. Rapid Finding</h2>
+  <div class="resultgrid">
+   <div class="metric"><label>Body part</label><strong id="body" class="big">—</strong></div>
+   <div class="metric"><label>Potential problem</label><strong id="problem">—</strong></div>
+   <div class="metric"><label>Location</label><strong id="location">—</strong></div>
+   <div class="metric"><label>Confidence</label><strong id="confidence" class="green">—</strong></div>
+   <div class="metric"><label>Analysis time</label><strong id="time">—</strong></div>
+   <div class="metric"><label>Priority</label><strong id="priority">—</strong></div>
+  </div>
+  <div class="route">Selected specialized model: <b id="route">Waiting</b></div>
+  <div id="finding" class="finding" style="display:none"></div>
+ </div>
+
+ <div class="card history" style="margin-top:16px">
+  <h2>Recent Cases</h2>
+  <div id="history" class="small">No cases yet.</div>
+ </div>
+</aside>
+</div>
+<div class="footer">CODE PREDATORS • HackFusion • X-Ray → Body Part → Problem → Location</div>
+</div>
+
+<script>
+const file=document.getElementById('file'),viewer=document.getElementById('viewer'),preview=document.getElementById('preview');
+const placeholder=document.getElementById('placeholder'),overlay=document.getElementById('overlay');
+let ready=false, demoPart=null, currentFile=null;
+
+file.addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0])});
+['dragenter','dragover'].forEach(x=>viewer.addEventListener(x,e=>{e.preventDefault();viewer.classList.add('drag')}));
+['dragleave','drop'].forEach(x=>viewer.addEventListener(x,e=>{e.preventDefault();viewer.classList.remove('drag')}));
+viewer.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0])});
+
+function loadFile(f){
+ ready=true;demoPart=null;currentFile=f;preview.src=URL.createObjectURL(f);preview.style.display='block';placeholder.style.display='none';
+ clearUI();document.getElementById('status').textContent='X-ray loaded. Ready for AI analysis.';
+}
+function demo(part){
+ demoPart=part;ready=true;currentFile=null;
+ const svg={
+ dental:`<g fill="#e8eef6" opacity=".9">${Array.from({length:8},(_,i)=>`<rect x="${250+i*40}" y="${175+(i%2)*8}" width="28" height="150" rx="13" transform="rotate(${(i-3.5)*2} ${264+i*40} 250)"/>`).join('')}</g><path d="M205 340 Q400 390 595 340" fill="none" stroke="#a9bad0" stroke-width="18" opacity=".45"/>`,
+ chest:`<g fill="#cbd7e5" opacity=".82"><ellipse cx="315" cy="275" rx="110" ry="170"/><ellipse cx="485" cy="275" rx="110" ry="170"/></g><rect x="393" y="100" width="14" height="330" rx="7" fill="#edf3fa" opacity=".8"/>`,
+ forearm:`<g fill="#dfe8f2" opacity=".85"><rect x="220" y="55" width="58" height="380" rx="29" transform="rotate(8 249 245)"/><rect x="420" y="65" width="58" height="380" rx="29" transform="rotate(5 449 255)"/></g><path d="M255 305 L286 325" stroke="#05070b" stroke-width="9"/>`
+ }[part];
+ const label={dental:'DENTAL',chest:'CHEST',forearm:'FOREARM'}[part];
+ const s=`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520"><rect width="800" height="520" fill="#05070b"/>${svg}<text x="30" y="35" fill="#8796a9" font-family="Arial" font-size="16">DEMO ${label} X-RAY • SIMULATED</text></svg>`;
+ preview.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);preview.style.display='block';placeholder.style.display='none';
+ clearUI();document.getElementById('status').textContent=label+' demo loaded. Ready for AI analysis.';
+}
+function clearUI(){
+ ['body','problem','location','confidence','time','priority'].forEach(id=>document.getElementById(id).textContent='—');
+ document.getElementById('route').textContent='Waiting';document.getElementById('finding').style.display='none';overlay.style.display='none';
+ document.getElementById('bar').style.width='0%';document.querySelectorAll('.step').forEach(x=>x.classList.remove('active','done'));
+ document.querySelectorAll('.model').forEach(x=>x.classList.remove('selected'));
+}
+function resultFor(part){
+ return {
+ dental:{body:'Dental',problem:'Potential dental abnormality',location:'Lower molar region',confidence:89,priority:'Review recommended',route:'Dental Model',box:[60,45,28,38]},
+ chest:{body:'Chest',problem:'Potential opacity',location:'Right lower lung region',confidence:91,priority:'Priority review',route:'Chest Model',box:[55,55,23,23]},
+ forearm:{body:'Forearm',problem:'Possible fracture',location:'Distal radius',confidence:94,priority:'Priority review',route:'Forearm Model',box:[48,54,15,12]}
+ }[part];
+}
+function classifyUploaded(img){
+ // Browser-only prototype routing. It intentionally avoids pretending this is a
+ // validated medical classifier. Geometry provides a deterministic demonstration:
+ // panoramic dental is very wide; chest is near-square; forearm is portrait/narrow.
+ const ratio=img.naturalWidth/img.naturalHeight;
+ if(ratio>=1.65)return 'dental';
+ if(ratio<0.9)return 'forearm';
+ return 'chest';
+}
+function setOverlay(box){
+ const [l,t,w,h]=box;overlay.style.left=l+'%';overlay.style.top=t+'%';overlay.style.width=w+'%';overlay.style.height=h+'%';overlay.style.display='block';
+}
+async function runAnalysis(){
+ if(!ready){demo('chest')}
+ const ids=['s1','s2','s3','s4','s5','s6'];
+ const labels=['Preprocessing X-ray…','Identifying body part…','Selecting specialized model…','Detecting potential problem…','Localizing suspected region…','Generating finding…'];
+ ids.forEach(x=>document.getElementById(x).classList.remove('active','done'));
+ for(let i=0;i<ids.length;i++){
+  const el=document.getElementById(ids[i]);el.classList.add('active');document.getElementById('status').textContent=labels[i];
+  document.getElementById('bar').style.width=((i+1)/ids.length*100)+'%';
+  await new Promise(r=>setTimeout(r,480));el.classList.remove('active');el.classList.add('done');
+ }
+ const part=demoPart || classifyUploaded(preview), r=resultFor(part);
+ document.getElementById('body').textContent=r.body;document.getElementById('problem').textContent=r.problem;
+ document.getElementById('location').textContent=r.location;document.getElementById('confidence').textContent=r.confidence+'%';
+ const seconds=(2.4+Math.random()*1.0).toFixed(1);document.getElementById('time').textContent=seconds+' sec';
+ document.getElementById('priority').innerHTML='<span class="red">'+r.priority+'</span>';document.getElementById('route').textContent=r.route;
+ document.getElementById('mdental').classList.toggle('selected',part==='dental');document.getElementById('mchest').classList.toggle('selected',part==='chest');document.getElementById('mforearm').classList.toggle('selected',part==='forearm');
+ setOverlay(r.box);document.getElementById('overlayTag').textContent=r.problem;
+ const f=document.getElementById('finding');f.style.display='block';f.innerHTML='<strong>🔴 Potential finding detected</strong><br>'+r.body+' → '+r.problem+' → '+r.location+'<br><span class="small">Simulated finding for prototype demonstration. A medical professional must verify any result.</span>';
+ document.getElementById('status').innerHTML='<span style="color:#3ce39c">Analysis complete.</span> → '+r.route;
+ addHistory(r.body,r.problem,r.confidence,seconds);
+}
+function addHistory(body,problem,conf,time){
+ const h=document.getElementById('history');if(h.textContent==='No cases yet.')h.innerHTML='';
+ const d=document.createElement('div');d.className='case';d.innerHTML='<span>'+body+' • '+problem+'</span><span>'+conf+'% • '+time+'s</span>';h.prepend(d);
+}
+function resetAll(){ready=false;demoPart=null;currentFile=null;preview.src='';preview.style.display='none';placeholder.style.display='block';file.value='';document.getElementById('history').textContent='No cases yet.';clearUI();document.getElementById('status').textContent='Waiting for an X-ray…'}
+</script>
+</body>
+</html>
